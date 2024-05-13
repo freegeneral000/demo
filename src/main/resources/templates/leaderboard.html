@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Post List</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="mx-5">
+    <div class="m-3 d-flex">
+      <h1 class="display-3 fw-bold mb-0">リーダーボード  Top200</h1>
+      </div>
+    <table class="table table-hover mt-5">
+      <thead>
+      <tr>
+        <th scope="col">順位</th>
+        <th scope="col">名前</th>
+        <th scope="col">レーティング</th>
+        <th scope="col">勝利数</th>
+      </tr>
+      </thead>
+      <tbody>
+        <th:block th:each="player, status : ${leaderBoardDtoForm.players}">
+          <tr>
+            <td scope="row">
+              <div class="d-flex align-items-center">
+                <span class="fs-3" th:text="${player.leaderboardRank}"></span>
+              </div>
+            </td>
+            <td th:if="${player.gameName}">
+              <div class="d-flex align-items-center">
+                <span class="fs-3" th:text="${player.gameName}"></span>
+                <div class="ms-3">
+                  <span class="fs-5 text-muted" th:text="|#${player.tagLine}|"></span>
+                </div>
+              </div>
+            </td>
+            <td th:unless="${player.gameName}">
+              <div class="d-flex align-items-center">
+                <span class="fs-3">非公開エージェント</span>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <span class="fs-3" th:text="${player.rankedRating}"></span>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <span class="fs-3" th:text="${player.numberOfWins}"></span>
+              </div>
+            </td>
+          </tr>
+        </th:block>
+      </tbody>
+    </table>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+
+</html>

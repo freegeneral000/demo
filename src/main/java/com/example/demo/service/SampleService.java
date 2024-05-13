@@ -1,19 +1,23 @@
 package com.example.demo.service;
 
+import com.example.demo.form.LeaderBoardDtoForm;
 import com.example.demo.form.PostForm;
 import com.example.demo.model.Post;
 import com.example.demo.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 投稿サービス
+ * サンプルサービス
  */
 @Service
-public class PostService {
+public class SampleService {
 
     @Autowired
     PostRepository postRepository;
@@ -67,5 +71,33 @@ public class PostService {
         post.setDeleted(false);
 
         return post;
+    }
+
+    /**
+     * リーダーボードを取得します。
+     * @return リーダーボード
+     */
+    public LeaderBoardDtoForm getLeaderboard() {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setSupportedMediaTypes(List.of(MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON));
+        restTemplate.getMessageConverters().add(0, converter);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        // ここ
+        headers.set("X-Riot-Token", "");
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        ResponseEntity<LeaderBoardDtoForm> response = restTemplate.exchange(
+                "https://ap.api.riotgames.com/val/ranked/v1/leaderboards/by-act/4539cac3-47ae-90e5-3d01-b3812ca3274e?size=200&startIndex=0",
+                HttpMethod.GET,
+                request,
+                LeaderBoardDtoForm.class);
+
+        return response.getBody();
     }
 }

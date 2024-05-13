@@ -1,13 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.form.LeaderBoardDtoForm;
 import com.example.demo.form.PostForm;
-import com.example.demo.service.PostService;
+import com.example.demo.service.SampleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.BindParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -15,13 +15,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 /**
- * 投稿コントローラー
+ * サンプルコントローラー
  */
 @Controller
-public class PostController {
+public class SampleController {
 
     @Autowired
-    PostService postService;
+    SampleService sampleService;
 
     /**
      * 最初のページを表示します。
@@ -42,6 +42,24 @@ public class PostController {
     }
 
     /**
+     * Thymeleafのデモページを表示します。
+     * @param model モデル
+     * @return Thymeleafのデモページ
+     */
+    @GetMapping("/demo")
+    public String demo(Model model) {
+
+        Integer number = 1;
+        String string = "文字列";
+
+        model.addAttribute("num", number);
+        model.addAttribute("str", string);
+        model.addAttribute("sample", "サンプル文字列");
+
+        return "demo";
+    }
+
+    /**
      * 投稿一覧画面を表示します。
      * @param model モデル
      * @return 投稿一覧画面
@@ -49,7 +67,7 @@ public class PostController {
     @GetMapping("/post/list")
     public String getAllPosts(Model model) {
 
-        List<PostForm> postForms = postService.getAllPosts();
+        List<PostForm> postForms = sampleService.getAllPosts();
 
         model.addAttribute("postForms", postForms);
 
@@ -79,10 +97,25 @@ public class PostController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
-        postService.createPost(postForm);
+        sampleService.createPost(postForm);
 
         redirectAttributes.addFlashAttribute("message", "投稿を作成しました。");
 
         return "redirect:/post/list";
+    }
+
+    /**
+     * リーダーボードページを表示します。
+     * @param model モデル
+     * @return リーダーボードページ
+     */
+    @GetMapping("/valorant/leaderboard")
+    public String showLeaderboard(Model model) {
+
+        LeaderBoardDtoForm leaderBoardDtoForm = sampleService.getLeaderboard();
+
+        model.addAttribute("leaderBoardDtoForm", leaderBoardDtoForm);
+
+        return "leaderboard";
     }
 }
